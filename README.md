@@ -1,10 +1,13 @@
-# 台南一日散步｜行程地圖
+# 台南一日遊｜行程地圖
 
-單頁靜態 web app：時間軸行程 + 互動地圖，手機優先。
+單頁靜態 web app：可拖曳排序的行程清單 + 互動地圖，手機優先。
 
 - **前端**：Vite + React 19 + TypeScript + Tailwind CSS v4
-- **地圖**：Leaflet + react-leaflet，底圖用 CARTO Voyager（OpenStreetMap 資料），不需要 API key
-- **測試**：Vitest（時間與距離工具函式）
+- **地圖**：Leaflet + react-leaflet，OpenStreetMap 底圖，不需要 API key
+- **排序**：@dnd-kit，順序存在 localStorage（換行程時記得改 `useStopOrder.ts` 的 `STORAGE_KEY`）
+- **定位**：`navigator.geolocation.watchPosition`，地圖右下角 ➤ 可跳到目前位置（需 HTTPS）
+- **導航**：每站展開後有「Apple 地圖導航」，用 `maps.apple.com/?daddr=` 開啟
+- **測試**：Vitest（排序工具函式）
 
 ## 本機開發
 
@@ -21,19 +24,20 @@ npm run build    # 型別檢查 + 打包到 dist/
 
 ```ts
 {
-  id: 'ajiang',
-  time: '18:15',                 // 開始時間，停留時間由下一站自動算出
-  name: '阿江鱔魚意麵',
+  id: 'komoya',
+  name: '小茂屋',
   emoji: '🍜',
-  category: 'food',              // food | shop | dessert | photo | temple
-  address: '台南市中西區民族路三段89號',
-  position: [22.9983576, 120.1970408],   // [緯度, 經度]
-  hours: '17:00–00:00',
-  closed: '週一公休',
-  phone: '0937-671-052',
-  note: '40 年老店……',
+  category: 'food',              // food | shop | dessert | photo | temple | sight
+  address: '台南市東區長榮路三段40號',
+  position: [22.993065, 120.221785],   // [緯度, 經度]
+  hours: '10:00–00:00',
+  closed: '每月 1 日、15 日公休',
+  phone: '06-235-8162',
+  note: '成大人的共同回憶……',
 }
 ```
+
+陣列順序就是預設順序；使用者在 App 裡拖曳過的順序會存在瀏覽器，按「還原順序」可回到預設。
 
 要查座標可以在 Google Maps 對著店家按右鍵，第一行就是「緯度, 經度」。
 

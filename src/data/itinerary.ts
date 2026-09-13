@@ -1,10 +1,9 @@
-import type { LatLng } from '../lib/geo'
+export type LatLng = [lat: number, lng: number]
 
-export type Category = 'food' | 'shop' | 'dessert' | 'photo' | 'temple'
+export type Category = 'food' | 'shop' | 'dessert' | 'photo' | 'temple' | 'sight'
 
 export interface Stop {
   id: string
-  time: string // "HH:MM", start time
   name: string
   emoji: string
   category: Category
@@ -17,74 +16,48 @@ export interface Stop {
 }
 
 export const trip = {
-  title: '台南一日散步',
-  subtitle: '中西區 · 老店 × 復古選物 × 小吃',
+  title: '台南一日遊',
+  subtitle: '七股 · 安平 · 中西區 · 東區',
 }
 
+/** Default order. The user can reorder in the app; the order is kept in localStorage. */
 export const stops: Stop[] = [
   {
-    id: 'chunxianfang',
-    time: '11:30',
-    name: '醇涎坊古早味鍋燒意麵',
-    emoji: '🍜',
-    category: 'food',
-    address: '台南市中西區保安路53號',
-    position: [22.9902512, 120.1963613],
-    hours: '06:00–20:30',
-    phone: '06-221-5033',
-    note: '保安路排隊名店，銅板價大碗鍋燒意麵。想豐盛一點可以加炸料。',
+    id: 'longshan',
+    name: '七股龍山宮',
+    emoji: '⛩️',
+    category: 'temple',
+    address: '台南市七股區龍山里208號',
+    position: [23.138105, 120.113486],
+    hours: '06:00–21:00',
+    phone: '06-787-1058',
+    note: '1933 年創建，主祀池府千歲，龍山漁港旁的信仰中心。廟前廣場面向潟湖，附近有蚵嗲、蚵仔煎等海味小攤。',
   },
   {
-    id: 'shuangquanchang',
-    time: '12:30',
-    name: '雙全昌鞋行',
-    emoji: '👡',
-    category: 'shop',
-    address: '台南市中西區西門路二段316號',
-    position: [22.9971251, 120.2004968],
-    hours: '09:00–22:00',
-    phone: '06-225-9360',
-    note: '西門圓環旁的百年老鞋店。彩色藍白拖、木屐、雨鞋都在這裡。',
+    id: 'saltmountain',
+    name: '七股鹽山',
+    emoji: '🧂',
+    category: 'sight',
+    address: '台南市七股區鹽埕里66號',
+    position: [23.155971, 120.101675],
+    hours: '3–10 月 09:00–18:00 · 11–2 月 08:30–17:30',
+    closed: '除夕、颱風假休園',
+    phone: '06-780-0511',
+    note: '台灣唯一的雪白鹽山，可以爬上山頂俯瞰鹽田與潟湖。必吃鹹冰棒，園區每年換一隻巨型吉祥物。',
   },
   {
-    id: 'chongji',
-    time: '13:15',
-    name: '衝極商店',
-    emoji: '🪩',
-    category: 'shop',
-    address: '台南市中西區青年路53號',
-    position: [22.9923292, 120.2068892],
-    hours: '11:30–19:30',
-    note: '一秒回到 70 年代的復古選物店，很多可愛小物與飾品。',
-  },
-  {
-    id: 'miyuki',
-    time: '14:15',
-    name: '美雪冰菓室 2.0',
-    emoji: '🍧',
-    category: 'dessert',
-    address: '台南市中西區中山路79巷22-71號 2樓',
-    position: [22.99418, 120.20705],
-    hours: '12:30–17:00',
-    closed: '週二、三、四公休',
-    note: '在旭峯號旁的巷子裡、走上 2 樓，位置隱密請跟著導航。廢墟風老宅，手工布丁與剉冰是招牌。',
-  },
-  {
-    id: 'kouran',
-    time: '15:15',
-    name: '香蘭男子電棒燙',
-    emoji: '💈',
-    category: 'shop',
-    address: '台南市中西區國華街三段123號 2樓193室（永樂市場）',
-    position: [22.9969368, 120.1985199],
-    hours: '13:30–18:00',
-    closed: '週二至週四公休',
-    phone: '0937-570-078',
-    note: '永樂市場 2 樓，老派理髮廳改造的復古小潮店。「純」字系列商品很有台味。',
+    id: 'tongxing',
+    name: '東興洋行',
+    emoji: '🏛️',
+    category: 'sight',
+    address: '台南市安平區安北路233巷3號',
+    position: [23.001778, 120.158984],
+    hours: '10:00–18:00（以現場公告為準）',
+    phone: '06-391-1105',
+    note: '安平五洋行之一，德商 1870 年代設立，經營糖與樟腦出口。紅色圓拱迴廊配大榕樹是招牌畫面，市定古蹟免費參觀，館內有輕食與 DIY。',
   },
   {
     id: 'fotoshop',
-    time: '16:15',
     name: '又又美 FotoShop',
     emoji: '📷',
     category: 'photo',
@@ -96,7 +69,6 @@ export const stops: Stop[] = [
   },
   {
     id: 'xiluo',
-    time: '17:30',
     name: '西羅殿',
     emoji: '⛩️',
     category: 'temple',
@@ -106,17 +78,28 @@ export const stops: Stop[] = [
     note: '康熙 57 年（1718）創建，主祀廣澤尊王，五條港區域的重要廟宇。從民生路康樂街牌樓進去。',
   },
   {
-    id: 'ajiang',
-    time: '18:15',
-    name: '阿江鱔魚意麵',
+    id: 'komoya',
+    name: '小茂屋',
     emoji: '🍜',
     category: 'food',
-    address: '台南市中西區民族路三段89號',
-    position: [22.9983576, 120.1970408],
-    hours: '17:00–00:00',
-    closed: '週一公休',
-    phone: '0937-671-052',
-    note: '40 年老店，乾炒鱔魚滿滿鑊氣。越晚人越多，早點到排隊。',
+    address: '台南市東區長榮路三段40號',
+    position: [22.993065, 120.221785],
+    hours: '10:00–00:00',
+    closed: '每月 1 日、15 日公休',
+    phone: '06-235-8162',
+    note: '成大人的共同回憶，老字號鍋燒意麵。標準吃法是一碗麵配剉冰或豆花，再來杯古早味紅茶。',
+  },
+  {
+    id: 'minde',
+    name: '民德虱目魚粥',
+    emoji: '🐟',
+    category: 'food',
+    address: '台南市北區民德路11號',
+    position: [23.0046, 120.2038],
+    hours: '06:00–13:00',
+    closed: '週一及農曆初三、十七公休',
+    phone: '06-225-5701',
+    note: '在地人的早餐口袋名單，新鮮魚骨熬湯的虱目魚粥，肉燥飯也很有名。只賣到中午，要早點去。',
   },
 ]
 
@@ -126,4 +109,5 @@ export const categoryLabel: Record<Category, string> = {
   dessert: '甜點',
   photo: '攝影',
   temple: '廟宇',
+  sight: '景點',
 }

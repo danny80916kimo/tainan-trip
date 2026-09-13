@@ -49,8 +49,24 @@ body {
   transform: rotate(-45deg) scale(1.25);
   z-index: 1000;
 }
-.stop-marker--current {
-  background: var(--color-moss);
+.drag-handle {
+  touch-action: none;
+}
+
+/* Device position: blue dot with a soft pulse. */
+.user-marker {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: #2f6fdd;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px rgb(47 111 221 / 0.35), 0 2px 6px rgb(0 0 0 / 0.3);
+  animation: user-pulse 2s ease-out infinite;
+}
+@keyframes user-pulse {
+  0% { box-shadow: 0 0 0 2px rgb(47 111 221 / 0.35), 0 2px 6px rgb(0 0 0 / 0.3); }
+  70% { box-shadow: 0 0 0 12px rgb(47 111 221 / 0), 0 2px 6px rgb(0 0 0 / 0.3); }
+  100% { box-shadow: 0 0 0 2px rgb(47 111 221 / 0), 0 2px 6px rgb(0 0 0 / 0.3); }
 }
 
 .leaflet-container {

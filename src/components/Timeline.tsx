@@ -1,44 +1,55 @@
-import { Fragment } from 'react'
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core'
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import type { Stop } from '../data/itinerary'
-import { distanceMeters, walkMinutes } from '../lib/geo'
-import { toMinutes } from '../lib/time'
 import { StopCard } from './StopCard'
 
 interface Props {
   stops: Stop[]
-  selectedIndex: number | null
-  currentIndex: number
-  onSelect: (index: number) => void
+  selectedId: string | null
+  onSelect: (id: string) => void
+  onMove: (from: number, to: number) => void
 }
 
-export function Timeline({ stops, selectedIndex, currentIndex, onSelect }: Props) {
-  return (
-    <ol className="relative space-y-0 px-4 py-4">
-      {/* vertical spine behind the numbered badges */}
-      <div aria-hidden className="absolute top-8 bottom-8 left-[31px] w-0.5 bg-line" />
+export function Timeline({ stops, selectedId, onSelect, onMove }: Props) {
+  // Dragging only starts from the ⋮⋮ handle, so no activation distance is
+  // needed and normal scrolling on the cards keeps working.
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  )
 
-      {stops.map((stop, i) => {
-        const next = stops[i + 1]
-        const stay = next ? toMinutes(next.time) - toMinutes(stop.time) : null
-        const meters = next ? distanceMeters(stop.position, next.position) : null
-        return (
-          <Fragment key={stop.id}>
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return
+    const from = stops.findIndex((s) => s.id === active.id)
+    const to = stops.findIndex((s) => s.id === over.id)
+    if (from !== -1 && to !== -1) onMove(from, to)
+  }
+
+  return (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={stops.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+        <ol className="relative space-y-3 px-4 py-4">
+          {/* vertical spine behind the numbered badges */}
+          <div aria-hidden className="absolute top-8 bottom-8 left-[31px] w-0.5 bg-line" />
+          {stops.map((stop, i) => (
             <StopCard
+              key={stop.id}
               stop={stop}
               index={i}
-              stayMinutes={stay}
-              isSelected={selectedIndex === i}
-              isCurrent={currentIndex === i}
-              onSelect={() => onSelect(i)}
+              isSelected={selectedId === stop.id}
+              onSelect={() => onSelect(stop.id)}
             />
-            {meters !== null && (
-              <li className="py-2 pl-12 text-xs text-muted">
-                ↓ 直線約 {Math.round(meters / 10) * 10} 公尺 · 步行約 {walkMinutes(meters)} 分
-              </li>
-            )}
-          </Fragment>
-        )
-      })}
-    </ol>
+          ))}
+        </ol>
+      </SortableContext>
+    </DndContext>
   )
 }
